@@ -1,0 +1,14 @@
+{
+  "name": "lead-squad-middleware",
+  "version": "1.0.0",
+  "description": "Middleware to connect Lead Squad CRM with Hooman Labs AI calling",
+  "main": "netlify/functions/webhook.js",
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "netlify build"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": "18.x"
+  }
+}
