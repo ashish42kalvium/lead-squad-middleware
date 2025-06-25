@@ -1,3 +1,5 @@
+const fetch = require('node-fetch'); // only if using local testing with Netlify CLI
+
 exports.handler = async (event, context) => {
   try {
     const body = JSON.parse(event.body);
@@ -5,39 +7,39 @@ exports.handler = async (event, context) => {
 
     const HOOMAN_API_URL = process.env.HOOMAN_API_URL;
     const HOOMAN_API_KEY = process.env.HOOMAN_API_KEY;
-    const HOOMAN_CAMPAIGN_ID = process.env.HOOMAN_CAMPAIGN_ID || "test-campaign";
+    const HOOMAN_CAMPAIGN_ID = process.env.HOOMAN_CAMPAIGN_ID || 'test-campaign';
+
+    console.log("Sending to:", HOOMAN_API_URL);
 
     const response = await fetch(HOOMAN_API_URL, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        "x-api-key": HOOMAN_API_KEY
+        'Content-Type': 'application/json',
+        'x-api-key': HOOMAN_API_KEY
       },
       body: JSON.stringify({
         name,
         phone,
         email,
         campaignId: HOOMAN_CAMPAIGN_ID
-      })
+      }),
+      timeout: 10000 // optional if supported
     });
 
-    const result = await response.json();
+    const data = await response.json();
 
     return {
       statusCode: 200,
-      body: JSON.stringify({
-        success: true,
-        message: "AI call triggered successfully",
-        result
-      })
+      body: JSON.stringify({ success: true, data })
     };
   } catch (error) {
+    console.error("Fetch error:", error);
     return {
       statusCode: 500,
       body: JSON.stringify({
         success: false,
-        error: "Failed to process webhook",
-        details: error.message
+        error: "Network error",
+        message: error.message
       })
     };
   }
